@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Github Roaster</title>
+        <title>GitHub Roaster</title>
 
         <style>
             * {
@@ -158,9 +158,9 @@
 
     <body>
         <main>
-            <h1>Github Roaster</h1>
+            <h1>GitHub Roaster</h1>
             <form>
-                <input type="text" autofocus name="username" id="username" placeholder="Enter your github username">
+                <input type="text" autofocus name="username" id="username" placeholder="Enter your GitHub username">
                 <input type="submit" id="submit" value="Roast this user!" disabled>
             </form>
 
@@ -238,7 +238,7 @@
             });
 
             share.addEventListener('click', () => {
-                const text = `${result.innerHTML.slice(0, 230)}... - Github Roaster by github.com/programORdie2`;
+                const text = `${result.innerHTML.slice(0, 230)}... - GitHub Roaster by github.com/programORdie2`;
                 const url = `https://twitter.com/intent/tweet?text=${text}`;
                 window.open(url, '_blank');
             });
