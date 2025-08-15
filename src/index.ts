@@ -33,6 +33,15 @@ export default {
 
 		const repos: any[] = await (await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`, { headers: headers })).json();
 
+		// Prefer non-forks over forks, limit to 5 repos
+		const nonForks = repos.filter(repo => !repo.fork);
+		const forks = repos.filter(repo => repo.fork);
+
+		const selectedRepos = [
+			...nonForks.slice(0, 5),
+			...forks.slice(0, Math.max(0, 5 - nonForks.length))
+		].slice(0, 5);
+
 		let readme = '';
 		try {
 			const _readme = await fetch(`https://raw.githubusercontent.com/${username}/${username}/main/README.md`, { headers: headers });
@@ -50,7 +59,7 @@ export default {
 			following: profile.following,
 			public_repos: profile.public_repos,
 			created_at: profile.created_at,
-			repos: repos.map((repo) => ({
+			repos: selectedRepos.map((repo) => ({
 				name: repo.name,
 				description: repo.description,
 				language: repo.language,
@@ -62,7 +71,19 @@ export default {
 			readme: readme,
 		}
 
-		const prompt = `give a short and harsh roasting for the following github profile: ${username}. Do it in 3 paragraphs of each 150 words, separated by a blank line. Here are the details: ${JSON.stringify(data)}`
+		const prompt = `You are a merciless GitHub account roaster. Your job is to deliver the harshest, most creative roast imaginable for the following profile: @${username}. 
+Go after their repos, coding habits, contributions, README, bio, and anything else that looks laughable or unimpressive. 
+Do NOT hold back, do NOT compliment, and do NOT soften the blow. 
+Your roast must be witty, spicy, and highly specific—avoid generic or recycled insults. 
+Focus on embarrassing their commit history, repo quality, lack of stars, README content, and anything else you can find.
+
+Write exactly 3 distinct paragraphs, each around 150 words. Start each paragraph with a bold, punchy sentence. 
+Separate paragraphs with double line breaks (\n\n). 
+Do not add introductions or conclusions—just start roasting.
+
+Profile data:
+${JSON.stringify(data, null, 2)}
+`;
 
 		let response: any;
 
