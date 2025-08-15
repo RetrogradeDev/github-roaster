@@ -78,7 +78,7 @@ Your roast must be witty, spicy, and highly specific—avoid generic or recycled
 Focus on embarrassing their commit history, repo quality, lack of stars, README content, and anything else you can find.
 
 Write exactly 3 distinct paragraphs, each around 150 words. Start each paragraph with a bold, punchy sentence. 
-Separate paragraphs with double line breaks (\n\n). 
+Separate paragraphs with double line breaks. 
 Do not add introductions or conclusions—just start roasting.
 
 Profile data:
@@ -106,10 +106,15 @@ ${JSON.stringify(data, null, 2)}
 		}
 
 		response = response.response;
-		response = response.replaceAll('\n', '<br>').replaceAll('<br><br>', '<br>');
 
-		console.log('response', response);
+		// Markdown bold (**text**) and heading (#text) to <b>text</b>
+		response = response
+			.replace(/(?:^|\n)#\s?([^\n]+)/g, function(match, p1) {
+				return `<b>${p1.trim()}</b>`;
+			})
+			.replace(/\*\*([^\*]+)\*\*/g, '<b>$1</b>');
 		
+		response = response.replaceAll('\n', '<br>').replaceAll('<br><br>', '<br>');
 
 		return new Response(JSON.stringify({
 			succes: true,
